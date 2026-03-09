@@ -29,10 +29,10 @@ export function BalanceCard({ account, loading, className }: Props) {
       {/* ── Header ── */}
       <div className="relative z-10 flex items-start justify-between">
         <div>
-          <p className="balance-heading text-xs font-medium uppercase tracking-widest mb-0.5">
+          <p className="balance-heading text-xs font-semibold uppercase text-white/80">
             Saldo Total da Fazenda
           </p>
-          <p className="balance-subheading text-xs">{account?.accountId}</p>
+          <p className="balance-subheading text-sm font-semibold text-white">{account?.accountId}</p>
         </div>
 
         {/* Frosted-glass action buttons */}
@@ -76,7 +76,6 @@ export function BalanceCard({ account, loading, className }: Props) {
 /* Renders the integer part normally and the decimal part at lower opacity */
 function formatBalanceWithCents(value: number) {
   const formatted = formatCurrency(value)
-  // Split at the comma separator (pt-BR: R$ 1.234,56 → split on last comma)
   const commaIdx = formatted.lastIndexOf(',')
   if (commaIdx === -1) return <span>{formatted}</span>
   const integer = formatted.slice(0, commaIdx)
