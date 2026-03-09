@@ -1,6 +1,6 @@
 # FeeAgro — RWA Dashboard
 
-Mini-dashboard de banking/Web3 focado em RWA do agronegócio brasileiro (Soja e Milho), desenvolvido como teste técnico para vaga de Desenvolvedor Frontend Sênior.
+Mini-dashboard de banking/Web3 focado em RWA do agronegócio brasileiro (Soja e Milho), desenvolvido como teste técnico para vaga de Desenvolvedor.
 
 ## Como rodar
 
@@ -71,10 +71,5 @@ src/
 
 ## O que melhoraria com mais tempo
 
-- Autenticação com NextAuth.js (login/logout real)
-- Integração com API real ou contrato Web3 (wagmi + viem)
-- Paginação server-side nas transações
-- Dark mode com `prefers-color-scheme`
-- Testes E2E com Playwright
-- React Query para cache e revalidação automática
+- Integração com API real ou contrato Web3
 - Deploy na Vercel com CI/CD automático
