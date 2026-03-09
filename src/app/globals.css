@@ -1,26 +1,241 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* ─── Brand greens (scale kept for backward compat) ─── */
+  --color-brand-50:  #f0faf4;
+  --color-brand-100: #d8f3dc;
+  --color-brand-200: #b7e4c7;
+  --color-brand-300: #74c69d;
+  --color-brand-400: #52b788;
+  --color-brand-500: #40916c;
+  --color-brand-600: #2d6a4f;
+  --color-brand-700: #1b4332;
+  --color-brand-800: #143326;
+  --color-brand-900: #0d2218;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  /* ─── Accent palette ─── */
+  --color-accent-green:  #68a72c;
+  --color-accent-yellow: #e2b715;
+  --color-accent-dark:   #145d38;
+  --color-accent-teal:   #113344;
+
+  /* ─── FeeAgro brand tokens (shared dark/light) ─── */
+  --color-fee-teal:        #113344;   /* primary brand blue-dark */
+  --color-fee-green-dark:  #145d38;   /* dark forest green       */
+  --color-fee-green-light: #68a72c;   /* vibrant lime-green      */
+  --color-fee-yellow:      #e2b715;   /* gold-yellow             */
+  --color-light-secondary: #64748b;   /* slate for light text    */
+
+  /* ─── Gold (backward compat) ─── */
+  --color-gold-400: #f0c040;
+  --color-gold-500: #c9a227;
+  --color-gold-600: #a07d1a;
+
+  /* ─── Dark surfaces ─── */
+  --color-surface:        #0d1110;
+  --color-surface-card:   #161f1c;
+  --color-surface-raised: #1c2723;
+  --color-surface-accent: #1a2e1e;
+  --color-border-subtle:  #1e3420;
+
+  /* ─── Semantic text ─── */
+  --color-dim: #8b9a94;
+
+  /* ─── Typography ─── */
+  --font-sans: var(--font-inter), var(--font-geist-sans), Arial, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Shared CSS custom properties (non-Tailwind tokens) ─── */
+:root {
+  --border-card:           rgba(255, 255, 255, 0.05);  /* dark  */
+  --btn-action-bg:         rgba(17, 51, 68, 0.50);
+  --btn-action-border:     rgba(255, 255, 255, 0.10);
+  --btn-action-icon-color: #68a72c;                    /* accent-green */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-surface);
+  color: #e8f5e9;
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — "Modo Claro Agrícola"
+   Design tokens from spec:
+     bg-light-app     #F4F7F5  · bg-light-sidebar  #FDFDF9  · bg-light-card #FFFFFF
+     text-primary     #113344  (fee-teal)
+     text-secondary   #64748B  (light-secondary / slate)
+   ════════════════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* ── Surfaces ── */
+  --color-surface:        #F4F7F5;
+  --color-surface-card:   #FFFFFF;
+  --color-surface-raised: #EEF2EC;
+  --color-surface-accent: #E4EDE0;
+  --color-border-subtle:  #D1DBCC;
+  --color-dim:            #64748B;   /* spec: text-light-secondary slate  */
+
+  /* ── Component-level tokens ── */
+  --border-card:           rgba(0, 0, 0, 0.07);
+  --btn-action-bg:         rgba(17, 51, 68, 0.05);   /* fee-teal/5  */
+  --btn-action-border:     rgba(17, 51, 68, 0.12);
+  --btn-action-icon-color: #113344;                  /* fee-teal    */
+
+  color: #113344;
+}
+
+/* ── Sidebar: cream-alabaster (#FDFDF9) ───────────────────────────────────── */
+[data-theme="light"] aside {
+  background-color: #FDFDF9;
+  border-right-color: #E5E7EB;  /* gray-200 */
+}
+/* Inactive nav items */
+[data-theme="light"] aside nav a {
+  color: rgba(17, 51, 68, 0.65);
+}
+[data-theme="light"] aside nav a:hover {
+  background-color: #F3F4F6;   /* gray-100 */
+  color: #113344;
+}
+/* Active nav item */
+[data-theme="light"] aside nav a[aria-current="page"] {
+  background-color: rgba(104, 167, 44, 0.10);  /* fee-green-light/10 */
+  color: #145D38;                               /* fee-green-dark     */
+  border-color: rgba(104, 167, 44, 0.20);
+}
+/* Footer version text */
+[data-theme="light"] aside p { color: rgba(17, 51, 68, 0.40); }
+
+/* ── Desktop top-bar (AppShell header) in light mode ── */
+[data-theme="light"] header {
+  color: #113344;
+}
+[data-theme="light"] header button {
+  color: rgba(17, 51, 68, 0.55);
+}
+[data-theme="light"] header button:hover {
+  background-color: #EEF2EC;
+  color: #113344;
+}
+/* Dropdown in light mode */
+[data-theme="light"] header .text-white\/80 { color: rgba(17,51,68,0.80); }
+[data-theme="light"] header .text-dim\/60   { color: rgba(17,51,68,0.50); }
+
+/* ── Balance card — hero gradient (dark mode default) ───────────────────────
+   Approximates the dark dashboard card:
+     - Deep teal/navy base
+     - Strong green spotlight no topo-centro
+     - Sutil highlight dourado no topo-direita
+   Light mode gets its own variant below to match the bright green card.
+   ─────────────────────────────────────────────────────────────────────────── */
+.balance-card {
+  background:
+    /* Ponto de luz principal (verde) no topo-centro */
+    radial-gradient(circle at 50% 0%, rgba(132, 199, 150, 0.55), transparent 60%),
+    /* Glow dourado discreto no canto superior direito */
+    radial-gradient(circle at 90% 0%,  rgba(226, 183, 21, 0.20), transparent 65%),
+    linear-gradient(
+      135deg,
+      #020f13 0%,
+      #073028 40%,
+      #020a11 100%
+    );
+}
+
+/* ── Balance card — light mode variant (bright green hero card) ─────────────
+   Approximates the "saldo total" card em modo claro:
+     - Topo-esquerda bem clara/cremosa
+     - Fundo em verde forte na diagonal inferior-direita
+   ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] .balance-card {
+  background:
+    radial-gradient(circle at 0% 0%, #fdfdf9 0%, transparent 55%),
+    linear-gradient(
+      to bottom right,
+      #F2F6E8 0%,
+      #4BA96A 45%,
+      #1C6B40 100%
+    );
+}
+
+/* ── Main content text inversions ──────────────────────────────────────────
+   Specificity (0,2,1) > Tailwind (0,1,0) → no !important needed.
+   ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] main .text-white           { color: #113344; }
+[data-theme="light"] main .text-white\/80       { color: rgba(17,51,68,0.80); }
+[data-theme="light"] main .text-white\/60       { color: rgba(17,51,68,0.60); }
+[data-theme="light"] main .text-white\/50       { color: rgba(17,51,68,0.50); }
+[data-theme="light"] main .text-white\/40       { color: rgba(17,51,68,0.40); }
+[data-theme="light"] main .text-white\/35       { color: rgba(17,51,68,0.35); }
+[data-theme="light"] main .text-white\/30       { color: rgba(17,51,68,0.30); }
+[data-theme="light"] main .text-brand-300\/60   { color: rgba(17,51,68,0.70); }
+[data-theme="light"] main .text-brand-300\/50   { color: rgba(17,51,68,0.60); }
+[data-theme="light"] main .text-brand-300\/40   { color: rgba(17,51,68,0.50); }
+[data-theme="light"] main .text-brand-300\/30   { color: rgba(17,51,68,0.40); }
+[data-theme="light"] main .text-dim\/70         { color: rgba(100,116,139,0.85); }
+[data-theme="light"] main .text-dim\/60         { color: rgba(100,116,139,0.75); }
+[data-theme="light"] main .text-dim\/40         { color: rgba(100,116,139,0.60); }
+
+/* ── Buttons em modo claro (primário / secundário) ────────────────────────── */
+[data-theme="light"] .btn-primary {
+  background-color: #145D38 !important;   /* verde escuro principal */
+  color: #ffffff !important;
+}
+[data-theme="light"] .btn-primary:hover {
+  background-color: #0f4b2a !important;
+}
+[data-theme="light"] .btn-primary:active {
+  background-color: #0b3820 !important;
+}
+
+[data-theme="light"] .btn-secondary {
+  background-color: #E8F3E6 !important;
+  color: #145D38 !important;
+  border-color: #C9E0CF !important;
+}
+[data-theme="light"] .btn-secondary:hover {
+  background-color: #dbe9d9 !important;
+}
+
+/* Transaction amounts in light mode (spec: incoming=fee-green-light, outgoing=fee-teal) */
+[data-theme="light"] main .text-brand-400       { color: #68a72c; }  /* income  */
+[data-theme="light"] main .text-red-400         { color: #113344; }  /* outgoing → teal instead of red */
+
+/* Card titles in light mode */
+[data-theme="light"] main .text-brand-300\/60,
+[data-theme="light"] main .uppercase.tracking-widest { color: rgba(17,51,68,0.55); }
+
+/* Card table / section borders */
+[data-theme="light"] main .border-border-subtle { border-color: #D1DBCC; }
+[data-theme="light"] main .border-border-subtle\/50 { border-color: rgba(209,219,204,0.50); }
+[data-theme="light"] main .hover\:bg-surface-raised\/50:hover { background-color: #EEF2EC80; }
+
+/* Inputs and selects */
+[data-theme="light"] main input,
+[data-theme="light"] main select,
+[data-theme="light"] main textarea {
+  background-color: #F4F7F5;
+  color: #113344;
+  border-color: #D1DBCC;
+}
+[data-theme="light"] main input::placeholder { color: rgba(17,51,68,0.30); }
+
+/* Scrollbar adapts */
+[data-theme="light"] ::-webkit-scrollbar-track { background: #F4F7F5; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); }
+
+/* ─── Remove native number input spinners globally ─── */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] { -moz-appearance: textfield; }
+
+/* ─── Custom scrollbar ─── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--color-surface); }
+::-webkit-scrollbar-thumb  { background: #ffffff12; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #ffffff22; }
