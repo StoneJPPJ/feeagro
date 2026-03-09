@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import { ArrowRight, LayoutDashboard, ArrowLeftRight, SendHorizontal } from 'lucide-react'
 import { useDashboard } from '@/hooks/useDashboard'
 import { useTheme } from '@/hooks/useTheme'
 import { BalanceCard } from '@/features/dashboard/BalanceCard'
@@ -13,6 +14,7 @@ import { Skeleton, TableRowSkeleton } from '@/components/ui/Skeleton'
 import { ThemeIconButton, UserMenu } from '@/components/layout/AppShell'
 import { formatCurrency, formatDate } from '@/lib/format'
 import { mockTransactions } from '@/lib/mock-data'
+import { cn } from '@/lib/cn'
 
 const statusLabel = { completed: 'Concluído', pending: 'Pendente', failed: 'Falhou' } as const
 const statusVariant = { completed: 'success', pending: 'warning', failed: 'error' } as const
@@ -20,6 +22,7 @@ const statusVariant = { completed: 'success', pending: 'warning', failed: 'error
 export default function DashboardPage() {
   const { account, portfolio, chartData, kycStatus, loading } = useDashboard()
   const { isDark, toggle } = useTheme()
+  const pathname = usePathname()
 
   const recentTx = mockTransactions.slice(0, 5)
 
@@ -38,15 +41,37 @@ export default function DashboardPage() {
               <p className="text-xs text-brand-300/40 mt-0.5">Painel RWA · Agronegócio</p>
             </div>
           )}
-        <div className="flex items-center gap-3">
-          <time className="hidden sm:block text-xs text-brand-300/30 tabular-nums">
-            {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
-          </time>
-          <div className="hidden md:flex items-center gap-2">
-            <ThemeIconButton isDark={isDark} onToggle={toggle} />
-            <UserMenu />
+          <div className="flex items-center gap-3">
+            {/* Navegação horizontal mobile (ícones) */}
+            <div className="flex md:hidden items-center gap-1.5">
+              <MobileNavIcon
+                href="/dashboard"
+                label="Dashboard"
+                Icon={LayoutDashboard}
+                active={pathname === '/dashboard'}
+              />
+              <MobileNavIcon
+                href="/transactions"
+                label="Transações"
+                Icon={ArrowLeftRight}
+                active={pathname === '/transactions'}
+              />
+              <MobileNavIcon
+                href="/operations"
+                label="Nova operação"
+                Icon={SendHorizontal}
+                active={pathname === '/operations'}
+              />
+            </div>
+
+            <time className="hidden sm:block text-xs text-brand-300/30 tabular-nums">
+              {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+            </time>
+            <div className="hidden md:flex items-center gap-2">
+              <ThemeIconButton isDark={isDark} onToggle={toggle} />
+              <UserMenu />
+            </div>
           </div>
-        </div>
       </div>
 
       {/* ── Bento grid ──
@@ -125,5 +150,29 @@ export default function DashboardPage() {
       </div>
 
     </div>
+  )
+}
+
+interface MobileNavIconProps {
+  href: string
+  label: string
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  active: boolean
+}
+
+function MobileNavIcon({ href, label, Icon, active }: MobileNavIconProps) {
+  return (
+    <Link
+      href={href}
+      aria-label={label}
+      className={cn(
+        'w-8 h-8 rounded-full border flex items-center justify-center transition-colors text-xs',
+        active
+          ? 'bg-accent-green text-surface-card border-accent-green/80'
+          : 'bg-surface-raised/80 text-brand-300/60 border-border-subtle hover:text-white hover:bg-surface-raised',
+      )}
+    >
+      <Icon className="size-4" />
+    </Link>
   )
 }

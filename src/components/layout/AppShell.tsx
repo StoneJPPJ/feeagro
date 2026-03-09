@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Menu } from 'lucide-react'
 import { Sidebar } from './Sidebar'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -10,7 +9,6 @@ import { useTheme } from '@/hooks/useTheme'
 const USER_INITIALS = 'JP'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false)
   const { toggle, isDark } = useTheme()
 
   return (
@@ -21,36 +19,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Sidebar />
       </div>
 
-      {/* Mobile full-label drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 flex md:hidden">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden
-          />
-          <div className="relative z-10">
-            <Sidebar showLabels onClose={() => setMobileOpen(false)} />
-          </div>
-        </div>
-      )}
-
       {/* Main area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
 
-        {/* Mobile top-bar */}
-        <header className="md:hidden flex items-center gap-3 px-4 py-3 bg-surface-card border-b border-[color:var(--border-card)] shrink-0">
-          <button
-            onClick={() => setMobileOpen(true)}
-            aria-label="Abrir menu"
-            className="p-1.5 rounded-xl hover:bg-surface-raised transition-colors text-dim/60"
-          >
-            <Menu className="size-5" />
-          </button>
-
+        {/* Mobile top-bar — somente logo + controles de usuário/tema */}
+        <header className="md:hidden flex items-center justify-between px-4 py-3 bg-surface-card border-b border-[color:var(--border-card)] shrink-0">
           <Image src="/feeagro.svg" alt="FeeAgro" width={72} height={20} priority />
 
-          <div className="ml-auto flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <ThemeIconButton isDark={isDark} onToggle={toggle} />
             <UserMenu />
           </div>

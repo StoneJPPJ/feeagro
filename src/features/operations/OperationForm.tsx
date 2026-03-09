@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm, Controller, type Resolver } from 'react-hook-form'
+import { useForm, Controller, type Resolver, type FieldError } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Button } from '@/components/ui/Button'
@@ -10,10 +10,21 @@ import type { OperationFormData } from '@/types'
 const schema = z.object({
   type: z.enum(['pix', 'transfer', 'invest']),
   beneficiary: z.string().min(3, 'Informe o beneficiário (mín. 3 caracteres)'),
-  amount: z.coerce
-    .number()
-    .min(0.01, 'Valor deve ser maior que zero')
-    .max(500000, 'Limite máximo de R$ 500.000'),
+  amount: z.preprocess(
+    (value) => {
+      // Permite campo vazio antes da validação (mostra erro "informe o valor")
+      if (value === '' || value === null || typeof value === 'undefined') return undefined
+      const num = Number(value)
+      return Number.isNaN(num) ? undefined : num
+    },
+    z
+      .number()
+      .min(0.01, 'Valor deve ser maior que zero')
+      .max(500000, 'Limite máximo de R$ 500.000')
+      .refine((val) => typeof val === 'number' && !Number.isNaN(val), {
+        message: 'Informe um valor numérico válido',
+      }),
+  ),
   memo: z.string().max(100, 'Máximo 100 caracteres').optional(),
 })
 
@@ -38,11 +49,11 @@ interface Props {
      • Up to 2 decimal digits after the comma
      • Returns display string e.g. "200.000,00" and numeric 200000.00
 ──────────────────────────────────────────────────────────────────────────── */
-function parseCurrencyInput(input: string): { display: string; numeric: number } {
+function parseCurrencyInput(input: string): { display: string; numeric: number | undefined } {
   // Strip thousand-separator dots then keep only digits and one comma
   const cleaned = input.replace(/\./g, '').replace(/[^\d,]/g, '')
 
-  if (!cleaned) return { display: '', numeric: 0 }
+  if (!cleaned) return { display: '', numeric: undefined }
 
   const [intStr = '', decStr] = cleaned.split(',')
   const intNum = parseInt(intStr, 10) || 0
@@ -55,7 +66,7 @@ function parseCurrencyInput(input: string): { display: string; numeric: number }
     ? `${intFormatted},${decStr.slice(0, 2)}`
     : intFormatted
 
-  const numeric = parseFloat(`${intStr || '0'}.${decStr ?? '00'}`) || 0
+  const numeric = parseFloat(`${intStr || '0'}.${decStr ?? '00'}`)
 
   return { display, numeric }
 }
@@ -147,7 +158,7 @@ export function OperationForm({ onSubmit }: Props) {
                 onChange={(e) => {
                   const { display, numeric } = parseCurrencyInput(e.target.value)
                   setAmountDisplay(display)
-                  field.onChange(numeric || '')
+                  field.onChange(typeof numeric === 'number' ? numeric : '')
                 }}
                 className="w-full pl-9 pr-4 py-2 text-sm bg-surface-raised text-white placeholder:text-brand-300/30
                   border border-border-subtle rounded-xl
@@ -161,7 +172,7 @@ export function OperationForm({ onSubmit }: Props) {
         />
         {errors.amount && (
           <p id="amount-error" role="alert" className="mt-1 text-xs text-red-400">
-            {errors.amount.message}
+            {getAmountErrorMessage(errors.amount)}
           </p>
         )}
       </div>
@@ -191,4 +202,15 @@ export function OperationForm({ onSubmit }: Props) {
       </Button>
     </form>
   )
+}
+
+function getAmountErrorMessage(error: FieldError): string {
+  const msg = error.message ?? ''
+  const normalized = msg.toLowerCase()
+
+  if (!msg || normalized.includes('invalid input') || normalized.includes('expected number')) {
+    return 'Informe o valor da operação'
+  }
+
+  return msg
 }

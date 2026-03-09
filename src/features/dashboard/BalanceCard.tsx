@@ -29,10 +29,10 @@ export function BalanceCard({ account, loading, className }: Props) {
       {/* ── Header ── */}
       <div className="relative z-10 flex items-start justify-between">
         <div>
-          <p className="text-xs font-medium text-white/80 uppercase tracking-widest mb-0.5">
+          <p className="balance-heading text-xs font-medium uppercase tracking-widest mb-0.5">
             Saldo Total da Fazenda
           </p>
-          <p className="text-xs text-white/50">{account?.accountId}</p>
+          <p className="balance-subheading text-xs">{account?.accountId}</p>
         </div>
 
         {/* Frosted-glass action buttons */}

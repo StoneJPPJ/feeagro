@@ -1,6 +1,7 @@
 'use client'
 
-import { CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { CheckCircle, X } from 'lucide-react'
 import { useOperation } from '@/hooks/useOperation'
 import { OperationForm } from '@/features/operations/OperationForm'
 import { OperationSummary } from '@/features/operations/OperationSummary'
@@ -12,6 +13,17 @@ export default function OperationsPage() {
 
   return (
     <div className="px-4 py-6 md:px-8 max-w-lg mx-auto">
+      {/* Botão de fechar (mobile) — abaixo do logo, acima do título */}
+      <div className="mb-3 md:hidden">
+        <Link
+          href="/dashboard"
+          aria-label="Voltar para o dashboard"
+          className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-border-subtle text-dim/60 hover:bg-surface-raised hover:text-white transition-colors"
+        >
+          <X className="size-4" />
+        </Link>
+      </div>
+
       <div className="mb-6">
         <h1 className="text-xl font-semibold text-white">Nova Operação</h1>
         <p className="text-sm text-brand-300/40 mt-0.5">Simule transferências e investimentos em RWA</p>

@@ -199,9 +199,8 @@ body {
   background-color: #dbe9d9 !important;
 }
 
-/* Transaction amounts in light mode (spec: incoming=fee-green-light, outgoing=fee-teal) */
-[data-theme="light"] main .text-brand-400       { color: #68a72c; }  /* income  */
-[data-theme="light"] main .text-red-400         { color: #113344; }  /* outgoing → teal instead of red */
+/* Transaction amounts em modo claro */
+[data-theme="light"] main .text-brand-400 { color: #68a72c; }  /* income  */
 
 /* Card titles in light mode */
 [data-theme="light"] main .text-brand-300\/60,
